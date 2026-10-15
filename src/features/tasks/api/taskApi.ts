@@ -1,5 +1,5 @@
 import apiClient from '../../../api/client';
-import { Task, TaskListResponse, TaskFilterParams } from '../types';
+import type { Task, TaskListResponse, TaskFilterParams } from '../types';
 
 export const getTasks = async (params: TaskFilterParams): Promise<TaskListResponse> => {
   const { data } = await apiClient.get<TaskListResponse>('/tasks', { params });

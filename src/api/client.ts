@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getAccessToken, setAccessToken, clearAccessToken } from '../features/auth/utils/token';
 
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api',
   headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes('/auth/refresh') && !originalRequest.url?.includes('/auth/login')) {
+    if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes('/refresh') && !originalRequest.url?.includes('/login')) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -54,7 +54,7 @@ apiClient.interceptors.response.use(
 
       try {
         const { data } = await axios.post<{ access_token: string }>(
-          `${apiClient.defaults.baseURL}/auth/refresh`,
+          `${apiClient.defaults.baseURL}/refresh`,
           {},
           { headers: { Authorization: `Bearer ${getAccessToken()}` } }
         );

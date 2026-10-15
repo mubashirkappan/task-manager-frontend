@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import apiClient from '../../../api/client';
-import { User, AuthResponse } from '../types';
+import type { User, AuthResponse } from '../types';
 import { getAccessToken, setAccessToken, clearAccessToken } from '../utils/token';
 
 interface AuthContextType {
@@ -16,6 +17,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -25,7 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
       try {
-        const { data } = await apiClient.get<User>('/auth/me');
+        const { data } = await apiClient.get<User>('/me');
         setUser(data);
       } catch {
         clearAccessToken();
@@ -37,22 +39,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (credentials: { email: string; password: string }) => {
-    const { data } = await apiClient.post<AuthResponse>('/auth/login', credentials);
+    const { data } = await apiClient.post<AuthResponse>('/login', credentials);
+    // Drop any cached data from a previous session before switching users.
+    queryClient.clear();
     setAccessToken(data.access_token);
     setUser(data.user);
   };
 
   const register = async (payload: { name: string; email: string; password: string }) => {
-    const { data } = await apiClient.post<AuthResponse>('/auth/register', payload);
+    const { data } = await apiClient.post<AuthResponse>('/register', payload);
+    // Drop any cached data from a previous session before switching users.
+    queryClient.clear();
     setAccessToken(data.access_token);
     setUser(data.user);
   };
 
   const logout = async () => {
     try {
-      await apiClient.post('/auth/logout');
+      await apiClient.post('/logout');
     } finally {
       clearAccessToken();
+      queryClient.clear();
       setUser(null);
     }
   };

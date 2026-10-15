@@ -5,8 +5,8 @@ export interface Task {
   title: string;
   description: string | null;
   status: TaskStatus;
-  created_date: string;
-  updated_date: string;
+  created_at: string;
+  updated_at: string;
   user: {
     id: string;
     name: string;
