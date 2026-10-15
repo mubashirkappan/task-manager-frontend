@@ -1,4 +1,4 @@
-import type { TaskStatus } from '../tasks/types';
+import type { Task, TaskStatus } from '../tasks/types';
 import type { UserRole } from '../auth/types';
 
 export type StatusCounts = Record<TaskStatus, number>;
@@ -12,9 +12,17 @@ export interface UserTaskStats {
   by_status: StatusCounts;
 }
 
-export interface DashboardStats {
-  total_users: number;
-  total_tasks: number;
-  by_status: StatusCounts;
+/** GET /dashboard/admin */
+export interface AdminDashboard {
+  users_summary: { total: number; regular_users: number; admins: number };
+  tasks_summary: StatusCounts & { total: number };
   users: UserTaskStats[];
+  recent_activity: Task[];
+}
+
+/** GET /dashboard/user */
+export interface UserDashboard {
+  total_tasks: number;
+  status_breakdown: StatusCounts;
+  recent_tasks: Task[];
 }

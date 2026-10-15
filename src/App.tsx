@@ -4,7 +4,6 @@ import { RegisterPage } from './features/auth/pages/RegisterPage';
 import { TasksPage } from './features/tasks/pages/TasksPage';
 import { DashboardPage } from './features/dashboard/pages/DashboardPage';
 import { ProtectedRoute } from './routes/ProtectedRoute';
-import { AdminRoute } from './routes/AdminRoute';
 import { AppLayout } from './layouts/AppLayout';
 
 export default function App() {
@@ -21,11 +20,9 @@ export default function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
           <Route path="/tasks" element={<TasksPage />} />
-
-          {/* Admin-only routes */}
-          <Route element={<AdminRoute />}>
-            <Route path="/admin" element={<DashboardPage />} />
-          </Route>
+          {/* Admins and users see different dashboards (and call different APIs). */}
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/admin" element={<Navigate to="/dashboard" replace />} />
         </Route>
       </Route>
 

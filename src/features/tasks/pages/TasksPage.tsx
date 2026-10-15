@@ -39,7 +39,10 @@ export const TasksPage: React.FC = () => {
     placeholderData: keepPreviousData,
   });
 
-  const invalidateTasks = () => queryClient.invalidateQueries({ queryKey: ['tasks'] });
+  const invalidateTasks = () => {
+    queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+  };
 
   const deleteMutation = useMutation({
     mutationFn: deleteTask,

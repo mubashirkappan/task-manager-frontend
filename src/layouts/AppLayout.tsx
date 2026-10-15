@@ -33,16 +33,12 @@ export const AppLayout: React.FC = () => {
             </div>
           </div>
           <nav className="flex items-center gap-1">
-            {isAdmin && (
-              <>
-                <NavLink to="/tasks" className={navClass} title="Tasks">
-                  <ListTodo size={16} /> <span className="hidden sm:inline">Tasks</span>
-                </NavLink>
-                <NavLink to="/admin" className={navClass} title="Dashboard">
-                  <LayoutDashboard size={16} /> <span className="hidden sm:inline">Dashboard</span>
-                </NavLink>
-              </>
-            )}
+            <NavLink to="/tasks" className={navClass} title="Tasks">
+              <ListTodo size={16} /> <span className="hidden sm:inline">Tasks</span>
+            </NavLink>
+            <NavLink to="/dashboard" className={navClass} title="Dashboard">
+              <LayoutDashboard size={16} /> <span className="hidden sm:inline">Dashboard</span>
+            </NavLink>
             <ThemeToggle />
             <button
               onClick={() => logout()}
